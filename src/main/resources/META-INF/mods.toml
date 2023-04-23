@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="capybara"
+version="1.0"
+displayName="Capybara Mod"
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+#displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
+logoFile="examplemod.png"
+credits="Me"
+authors="GITIPI"
+description='''
+A 1.19 Forge Modding Tutorial.
+'''

@@ -1,0 +1,13 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:river",
+    "minecraft:beach"
+  ],
+  "spawners": {
+    "type": "capybara:capybara_entity",
+    "weight": 75,
+    "minCount": 1,
+    "maxCount": 7
+  }
+}
