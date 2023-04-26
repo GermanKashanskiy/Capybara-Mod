@@ -21,8 +21,11 @@ public class ModClientEvents {
         event.registerEntityRenderer(EntityInit.CAPYBARA.get(), CapybaraEntityRenderer::new);
     }
 
+    /*
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(CapybaraModel.LAYER_LOCATION, CapybaraModel::createBodyLayer);
     }
+
+     */
 }

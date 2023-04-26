@@ -20,13 +20,25 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class CapybaraEntity extends Turtle {
+
+public class CapybaraEntity extends Turtle implements IAnimatable {
 
     public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
+
+    private AnimationFactory factory = new AnimationFactory(this);
+
     public CapybaraEntity(EntityType<? extends Turtle> type, Level level) {
         super(type, level);
+
     }
 
     @Nullable
@@ -37,11 +49,11 @@ public class CapybaraEntity extends Turtle {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new CapyGoToWaterGoal(this, 1.0D));
-        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, FOOD_ITEMS, false));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new CapyGoToWaterGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -54,6 +66,28 @@ public class CapybaraEntity extends Turtle {
     public static boolean canSpawn(EntityType<CapybaraEntity> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
         return checkAnimalSpawnRules(entityType, level, spawnType, pos, random) && pos.getY() > 50;
     }
+
+    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+        if (event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.capybara.walk", true));
+        }
+        else { // any state that is not event.isMoving() falls here
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.capybara.idle", true));
+        }
+        return PlayState.CONTINUE;
+
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
+
 
     static class CapyGoToWaterGoal extends MoveToBlockGoal {
         private static final int GIVE_UP_TICKS = 1200;
