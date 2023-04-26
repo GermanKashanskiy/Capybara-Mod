@@ -3,6 +3,8 @@ package dev.gitipi.capybara.entities;
 import dev.gitipi.capybara.init.EntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -11,10 +13,12 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -29,14 +33,14 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 
-public class CapybaraEntity extends Turtle implements IAnimatable {
+public class CapybaraEntity extends Animal implements IAnimatable {
 
     public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
 
     private AnimationFactory factory = new AnimationFactory(this);
 
-    public CapybaraEntity(EntityType<? extends Turtle> type, Level level) {
+    public CapybaraEntity(EntityType<? extends Animal> type, Level level) {
         super(type, level);
 
     }
@@ -49,18 +53,19 @@ public class CapybaraEntity extends Turtle implements IAnimatable {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(2, new TemptGoal(this, 1.2D, FOOD_ITEMS, false));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new CapyGoToWaterGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+
+        //this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
+        this.goalSelector.addGoal(4, new FloatGoal(this));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.2, FOOD_ITEMS, false));
+        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
     public static AttributeSupplier.Builder getMobAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.15D);
     }
 
     public static boolean canSpawn(EntityType<CapybaraEntity> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
@@ -70,6 +75,9 @@ public class CapybaraEntity extends Turtle implements IAnimatable {
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.capybara.walk", true));
+        }
+        else if (this.level.getFluidState(BlockPos.of(Mth.floor(this.getX()))).is(FluidTags.WATER)) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.capybara.seat", true));
         }
         else { // any state that is not event.isMoving() falls here
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.capybara.idle", true));
@@ -88,7 +96,7 @@ public class CapybaraEntity extends Turtle implements IAnimatable {
         return factory;
     }
 
-
+/*
     static class CapyGoToWaterGoal extends MoveToBlockGoal {
         private static final int GIVE_UP_TICKS = 1200;
         private final Turtle capybara;
@@ -111,4 +119,6 @@ public class CapybaraEntity extends Turtle implements IAnimatable {
             return p_30270_.getBlockState(p_30271_).is(Blocks.WATER);
         }
     }
+
+ */
 }
