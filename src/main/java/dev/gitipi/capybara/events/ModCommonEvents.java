@@ -21,6 +21,6 @@ public class ModCommonEvents {
 
     @SubscribeEvent
     public static void entityAttributes(EntityAttributeCreationEvent event) {
-        event.put(EntityInit.CAPYBARA.get(), CapybaraEntity.getExampleAttributes().build());
+        event.put(EntityInit.CAPYBARA.get(), CapybaraEntity.getMobAttributes().build());
     }
 }

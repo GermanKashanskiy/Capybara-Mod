@@ -13,7 +13,7 @@ public class ItemInit {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Capybara.MODID);
 
     public static final RegistryObject<Item> MYSTIC_MUSHROOM = ITEMS.register("mystic_mushroom",
-            () -> new Item(propsFood().food(new FoodProperties.Builder().nutrition(20).fast().build())));
+            () -> new Item(propsFood().food(new FoodProperties.Builder().nutrition(20).saturationMod(0.6f).build())));
 
 
     public static final RegistryObject<ForgeSpawnEggItem> EXAMPLE_ENTITY_SPAWN_EGG = ITEMS.register("capybara_entity_spawn_egg",
