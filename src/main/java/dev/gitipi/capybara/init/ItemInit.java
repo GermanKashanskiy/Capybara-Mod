@@ -12,12 +12,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class ItemInit {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Capybara.MODID);
 
-    public static final RegistryObject<Item> MYSTIC_MUSHROOM = ITEMS.register("mystic_mushroom",
-            () -> new Item(propsFood().food(new FoodProperties.Builder().nutrition(20).saturationMod(0.6f).build())));
-
 
     public static final RegistryObject<ForgeSpawnEggItem> EXAMPLE_ENTITY_SPAWN_EGG = ITEMS.register("capybara_entity_spawn_egg",
-            () -> new ForgeSpawnEggItem(EntityInit.CAPYBARA, 0xFF55AA, 0x27DA9F, propsMisc().stacksTo(16)));
+            () -> new ForgeSpawnEggItem(EntityInit.CAPYBARA, 0x402908, 0x805920, propsMisc().stacksTo(16)));
 
     private static Item.Properties propsMisc() {
         return new Item.Properties().tab(CreativeModeTab.TAB_MISC);

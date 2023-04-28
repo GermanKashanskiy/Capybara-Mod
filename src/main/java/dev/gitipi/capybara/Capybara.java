@@ -2,6 +2,7 @@ package dev.gitipi.capybara;
 
 import dev.gitipi.capybara.init.EntityInit;
 import dev.gitipi.capybara.init.ItemInit;
+import dev.gitipi.capybara.init.SoundInit;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -15,5 +16,6 @@ public class Capybara {
 
         ItemInit.ITEMS.register(bus);
         EntityInit.ENTITIES.register(bus);
+        SoundInit.SOUNDS.register(bus);
     }
 }

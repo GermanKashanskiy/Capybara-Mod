@@ -1,8 +1,10 @@
 package dev.gitipi.capybara.entities;
 
 import dev.gitipi.capybara.init.EntityInit;
+import dev.gitipi.capybara.init.SoundInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -49,7 +51,6 @@ public class CapybaraEntity extends Animal implements IAnimatable {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 0.9));
         this.goalSelector.addGoal(3, new BreedGoal(this, 0.9));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 0.9));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -60,10 +61,14 @@ public class CapybaraEntity extends Animal implements IAnimatable {
         return FOOD_ITEMS.test(p_29508_);
     }
 
-    public InteractionResult mobInteract(Player p_29489_, InteractionHand p_29490_) {
-        boolean flag = this.isFood(p_29489_.getItemInHand(p_29490_));
+    public InteractionResult mobInteract(Player player, InteractionHand p_29490_) {
+        boolean flag = this.isFood(player.getItemInHand(p_29490_));
 
-        InteractionResult interactionresult = super.mobInteract(p_29489_, p_29490_);
+        InteractionResult interactionresult = super.mobInteract(player, p_29490_);
+
+        if (flag) {
+            player.playSound(SoundInit.CAPY_SOUND.get());
+        }
 
         return interactionresult;
 
@@ -96,7 +101,4 @@ public class CapybaraEntity extends Animal implements IAnimatable {
     public AnimationFactory getFactory() {
         return factory;
     }
-
-
-
 }

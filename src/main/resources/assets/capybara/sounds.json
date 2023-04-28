@@ -1,0 +1,10 @@
+{
+  "capy_sound": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "capybara:capy_sound"
+      }
+    ]
+  }
+}
